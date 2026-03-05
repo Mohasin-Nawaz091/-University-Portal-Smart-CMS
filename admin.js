@@ -188,12 +188,22 @@ function initAdminAssignComplaint() {
     if (modalTitleEl) modalTitleEl.textContent = `Case #CMP-${complaint.id}: ${complaint.title}`;
 
     const deptSelect = document.querySelector('select');
-    if (complaint.department && deptSelect) {
-        // Find matching option
-        for (let i = 0; i < deptSelect.options.length; i++) {
-            if (deptSelect.options[i].text === complaint.department) {
-                deptSelect.selectedIndex = i;
-                break;
+    if (deptSelect) {
+        deptSelect.innerHTML = '<option value="" disabled selected>Select a department...</option>';
+        getDepartments().forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.toLowerCase();
+            opt.textContent = d;
+            deptSelect.appendChild(opt);
+        });
+
+        if (complaint.department) {
+            // Find matching option
+            for (let i = 0; i < deptSelect.options.length; i++) {
+                if (deptSelect.options[i].text === complaint.department) {
+                    deptSelect.selectedIndex = i;
+                    break;
+                }
             }
         }
     }

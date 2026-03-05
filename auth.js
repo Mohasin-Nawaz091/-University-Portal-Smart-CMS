@@ -48,6 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const registerForm = document.getElementById('register-form');
     if (registerForm && window.location.pathname.endsWith('register.html')) {
+
+        const regDeptSelect = document.getElementById('department');
+        if (regDeptSelect) {
+            regDeptSelect.innerHTML = '<option value="" disabled selected>Select Department</option>';
+            getDepartments().forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                regDeptSelect.appendChild(opt);
+            });
+        }
+
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;

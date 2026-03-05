@@ -1,11 +1,43 @@
-// Initialize storage if empty
-if (!localStorage.getItem('users')) {
-    localStorage.setItem('users', JSON.stringify([
-        { id: 1, name: 'Admin User', email: 'admin@university.edu', password: 'password', role: 'admin' },
-        { id: 2, name: 'IT Dept Admin', email: 'it@university.edu', password: 'password', role: 'dept_admin', department: 'IT Department' },
-        { id: 3, name: 'John Doe', email: 'student@university.edu', password: 'password', role: 'student' }
-    ]));
+// Constants
+let DEPARTMENTS = JSON.parse(localStorage.getItem('departments')) || [
+    'IT Department',
+    'Hostel Management',
+    'Discipline Committee',
+    'Academic Department',
+    'Library'
+];
+if (!localStorage.getItem('departments')) {
+    localStorage.setItem('departments', JSON.stringify(DEPARTMENTS));
 }
+
+function syncDefaultUsers() {
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    // Ensure admin exists
+    if (!users.find(u => u.email === 'admin@university.edu')) {
+        users.push({ id: users.length + 1, name: 'System Admin', email: 'admin@university.edu', password: 'password123', role: 'admin' });
+    }
+
+    // Ensure all departments have an admin account
+    DEPARTMENTS.forEach(dept => {
+        let emailPrefix = dept.split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+        let deptEmail = `${emailPrefix}_admin@university.edu`;
+        if (!users.find(u => u.department === dept && u.role === 'dept_admin')) {
+            users.push({
+                id: users.length + 1,
+                name: `${dept} Admin`,
+                email: deptEmail,
+                password: 'password123', // Default
+                role: 'dept_admin',
+                department: dept
+            });
+        }
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
+syncDefaultUsers();
 
 if (!localStorage.getItem('complaints')) {
     localStorage.setItem('complaints', JSON.stringify([]));
@@ -143,11 +175,16 @@ function markAllNotificationsAsRead(userId) {
     localStorage.setItem('notifications', JSON.stringify(allNotifications));
 }
 
-// Constants
-const DEPARTMENTS = [
-    'IT Department',
-    'Hostel Department',
-    'Discipline Committee',
-    'Academic Department',
-    'Library'
-];
+function addDepartment(newDeptName) {
+    if (!DEPARTMENTS.includes(newDeptName)) {
+        DEPARTMENTS.push(newDeptName);
+        localStorage.setItem('departments', JSON.stringify(DEPARTMENTS));
+        syncDefaultUsers(); // Creates account for the new dept automatically
+        return true;
+    }
+    return false;
+}
+
+function getDepartments() {
+    return JSON.parse(localStorage.getItem('departments')) || [];
+}

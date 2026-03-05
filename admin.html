@@ -138,9 +138,10 @@
                     </button>
                     <div class="h-6 w-px bg-slate-200 dark:border-slate-800"></div>
                     <button
+                        onclick="const d = prompt('Enter new department name:'); if(d) { addDepartment(d); alert('Department ' + d + ' added! Default account ' + d.split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g, '') + '_admin@university.edu generated with password123.'); location.reload(); }"
                         class="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg shadow-sm hover:bg-primary/90 transition-all flex items-center gap-2">
                         <span class="material-symbols-outlined text-sm">add</span>
-                        New Report
+                        Add Department
                     </button>
                 </div>
             </header>
