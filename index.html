@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UniSolve - Smart Complaint Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2563eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
+    <!-- Top Navigation Bar -->
+    <header
+        class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="bg-primary text-white p-1.5 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-xl">account_balance</span>
+                    </div>
+                    <span
+                        class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">UniSolve</span>
+                </div>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+                        href="#">Home</a>
+                    <a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+                        href="#">About</a>
+                    <a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+                        href="#">Support</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <a href="login.html"
+                        class="text-sm font-semibold text-slate-700 dark:text-slate-200 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all">
+                        Login
+                    </a>
+                    <a href="register.html"
+                        class="bg-primary text-white text-sm font-semibold px-5 py-2 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden py-20 lg:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="flex flex-col gap-8">
+                        <div
+                            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+                            <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            Empowering Campus Communication
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <h1
+                                class="text-4xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
+                                University Smart <span class="text-primary">Complaint</span> Management System
+                            </h1>
+                            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
+                                Report issues and track resolutions efficiently. Empowering students and staff to build
+                                a better campus together through transparency and accountability.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-4">
+                            <button
+                                class="flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-primary/25 hover:-translate-y-0.5 transition-all">
+                                Get Started <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                            <button
+                                class="flex items-center gap-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-8 py-4 rounded-xl font-bold text-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                                <span class="material-symbols-outlined">play_circle</span>
+                                Watch Demo
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-4 pt-4">
+                            <div class="flex -space-x-3">
+                                <div
+                                    class="w-10 h-10 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center overflow-hidden">
+                                    <img class="w-full h-full object-cover" data-alt="Student profile portrait 1"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPuLbqHYdkCiwmUVSdKkYhe8rF8GbFTuHH8v0JY_wsnysbxTNpHkMp8TrvrI1GE-htjT7att84sFOfABJOFg5Yt5DzFzs58eLc6o1PuDimHWVEwtedJr_y0p4gvhLJAbi9GPAMtTXrupA4U5X4zpwMUVMBhuXowLmhy89bU81TPqkaDty9Ec2Ft3u2UBTBj9V4oI9_VMe-PfX8t46T6QH9qFXH_xSw3CjNwk8fH9bHqpFT9d7gRAsTgp9YVALS_q24qDk56z3r" />
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center overflow-hidden">
+                                    <img class="w-full h-full object-cover" data-alt="Student profile portrait 2"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgfcsVuwOa-94uvILKmSvsycusLdARpVyM88xUF9Gwhzmc-UyND4mO08AcaBw96B-J1t2toF4kIF22ZtQ_V5by-GNCZDeh7A_-J-KrI-KSGyjCrZAjlQjed0AVHZyKXq4uhepDxrbuDdOHVCvu_8ewgyLS7PqJrkJ3pC7WscJOEGsYYHo5BAChHhy4R3zmNa25PCeD8N2ui3gL_fbTuSRz8E5sKH6baxsCxWe1zLFcj0mUjH6QnMY7vBMzWTVZ1IPDod1Wfccw" />
+                                </div>
+                                <div
+                                    class="w-10 h-10 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center overflow-hidden">
+                                    <img class="w-full h-full object-cover" data-alt="Student profile portrait 3"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3zgonH2fUpTeTtx3BNJehTyL2NwyXipTefCVNWWtaaAByzbX33Tp5uunI_kI3BxQWoCOqQ0-kqmC65nvwIEXZJprspvDY6NJ0aCsV6xekcBuAlGtd_RLvT8a9FFuV0jKd_LYwUblaT898qFeGkvT9rW8-iqc80v8H9psOBp3HGkji0G8LxeP28UI_lXP24V-hcyo7-ZzyC57Dj579GuP9F5wdnxleaoQBnYmnN5QpPVaN7Qo4YBl7i_hpnGLPtDptIG6P4drA" />
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Joined by 2,000+ students
+                                this semester</p>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-transparent blur-3xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity">
+                        </div>
+                        <div
+                            class="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-2xl">
+                            <img class="rounded-2xl shadow-inner w-full"
+                                data-alt="Dashboard interface showing complaint tracking statistics and graphs"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvrgZwfpmkBzcuHLlc74XimaDISidUl43XZn2MRv1XvsGHEVd3DDOxyeVAuxrL8NSyCkMbmFq5PyQJgob-qG6XZVDYRc92OoUg_RbY8Gb4tSgZbG7VpWit9xjofJmYJArrz2ZeGhd6kMEkPnmoG4RwIxtqgnj5yQ4mwWQD3Nj92SDlmMQ2H12MPc9cfJe693s_Fz8kzxgduZzo8HECvue9vy8NqOZ9VuWMupI1Vl86negw7QjBiYOfWw1sffTNBRFyVabdOTw3" />
+                            <div
+                                class="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-4 animate-bounce">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Status
+                                        Updated</p>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">Issue Resolved!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Features Section -->
+        <section class="py-24 bg-slate-50 dark:bg-slate-900/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white mb-4">Streamlined
+                        Resolution Process</h2>
+                    <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Our platform bridges the gap between
+                        students and administration, ensuring every voice is heard and every issue is addressed.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Feature Card 1 -->
+                    <div
+                        class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-3xl">edit_note</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Easy Complaint Submission</h3>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+                            Submit academic or infrastructural issues in seconds via our intuitive interface. Upload
+                            photos and categorize concerns with ease.
+                        </p>
+                    </div>
+                    <!-- Feature Card 2 -->
+                    <div
+                        class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-3xl">monitoring</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Real-Time Tracking</h3>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+                            Monitor the live status of your tickets. Get instant notifications when your complaint is
+                            assigned, reviewed, or resolved.
+                        </p>
+                    </div>
+                    <!-- Feature Card 3 -->
+                    <div
+                        class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-3xl">hub</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Department Resolution</h3>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+                            Direct routing to responsible departments ensures faster response times and clear
+                            accountability across the university.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- CTA Section -->
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="relative bg-primary rounded-[2rem] p-12 overflow-hidden shadow-2xl shadow-primary/20">
+                    <div
+                        class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-black/10 rounded-full blur-3xl">
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center text-center gap-8">
+                        <h2 class="text-3xl lg:text-5xl font-black text-white max-w-2xl leading-tight">Ready to voice
+                            your campus concern?</h2>
+                        <p class="text-primary-100 text-lg max-w-xl opacity-90">
+                            Join thousands of students and faculty members who are actively improving university life
+                            through efficient feedback.
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <button
+                                class="bg-white text-primary px-10 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all shadow-lg">
+                                File Your First Complaint
+                            </button>
+                            <button
+                                class="bg-primary/20 backdrop-blur-md text-white border border-white/30 px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition-all">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="bg-primary text-white p-1.5 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xl">account_balance</span>
+                        </div>
+                        <span
+                            class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">UniSolve</span>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 max-w-sm mb-6 leading-relaxed">
+                        The official smart complaint management portal for our university. Dedicated to creating a
+                        seamless communication bridge for our community.
+                    </p>
+                    <div class="flex gap-4">
+                        <a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all"
+                            href="#">
+                            <span class="material-symbols-outlined">public</span>
+                        </a>
+                        <a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all"
+                            href="#">
+                            <span class="material-symbols-outlined">mail</span>
+                        </a>
+                        <a class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all"
+                            href="#">
+                            <span class="material-symbols-outlined">alternate_email</span>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 dark:text-white font-bold mb-6">Resources</h4>
+                    <ul class="space-y-4">
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm"
+                                href="#">Privacy Policy</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm"
+                                href="#">Terms of Service</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm"
+                                href="#">Campus Map</a></li>
+                        <li><a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm"
+                                href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 dark:text-white font-bold mb-6">Contact Support</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-primary text-sm">call</span>
+                            +1 (555) 000-0000
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-primary text-sm">mail</span>
+                            support@unisolve.edu
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-primary text-sm">location_on</span>
+                            Main Administration Block, Floor 2
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-500 dark:text-slate-400 text-sm">
+                    © 2024 University Smart Complaint Management System. All rights reserved.
+                </p>
+                <div class="flex items-center gap-6">
+                    <a class="text-slate-500 dark:text-slate-400 hover:text-primary text-xs" href="#">Accessibility</a>
+                    <a class="text-slate-500 dark:text-slate-400 hover:text-primary text-xs" href="#">Sustainability</a>
+                    <a class="text-slate-500 dark:text-slate-400 hover:text-primary text-xs" href="#">Safety</a>
+                </div>
+            </div>
+        </div>
+        <script src="storage.js"></script>
+        <script src="auth.js"></script>
+</body>
+
+</html>

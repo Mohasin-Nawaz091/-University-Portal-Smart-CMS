@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Admin Complaint Management - Smart University</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside
+            class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined">school</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Smart Uni</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Admin
+                        Panel</p>
+                </div>
+            </div>
+            <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+                <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    href="admin.html">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors"
+                    href="admin_all_complaints.html">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">folder_open</span>
+                    <span class="text-sm font-semibold">All Complaints</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    href="admin_report.html">
+                    <span class="material-symbols-outlined">bar_chart</span>
+                    <span class="text-sm font-medium">Reports</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    href="admin_notification_ui.html">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="text-sm font-medium">Notifications</span>
+                </a>
+                <div class="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800">
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        href="user_profile.html">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="text-sm font-medium">Profile</span>
+                    </a>
+                    <a class="logout-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium transition-colors cursor-pointer"
+                        href="#">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="text-sm">Logout</span>
+                    </a>
+                </div>
+            </nav>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 m-4 rounded-xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 overflow-hidden">
+                        <img alt="Admin avatar" class="w-full h-full object-cover"
+                            data-alt="User profile photo showing a male face"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvmj9zmWBh1bhPFtIEYbI86rwVrAE5SVTrbkfIpJF7x_JwG8lRwrdyoUjH0YbXkp13xGBsonqeoKPoy4mNP7wM2lAXeISHRzyQDcknHMf1bIJX5mWUn2p4dt7XvQAoG4rYz7TU0Bd_oNCC2J6QyFbbgKnDWFakBR4E52vkqC9xVIe_1BKdZwqtGs6ZqukOMZ5gN5XRFCw7H3x_7RJr2zTo8m1lXYslMGAnDWP946VMxhtGuL3lCFmwzy80_2VjwVdqfjFJgSwO" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold truncate">Alex Johnson</p>
+                        <p class="text-xs text-slate-500 truncate">System Admin</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header
+                class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
+                <div class="flex items-center gap-6 flex-1">
+                    <h2 class="text-xl font-bold">All Complaints</h2>
+                    <div class="max-w-md w-full relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                        <input
+                            class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none"
+                            placeholder="Search by ID, Title or Student..." type="text" />
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-lg">download</span>
+                        Export Report
+                    </button>
+                    <button
+                        class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors relative">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                    </button>
+                    <button
+                        class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined">account_circle</span>
+                    </button>
+                </div>
+            </header>
+            <!-- Scrollable Body -->
+            <div class="flex-1 overflow-y-auto p-8 space-y-6">
+                <!-- Filter Bar -->
+                <div
+                    class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-4 items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium text-slate-500">Filters:</span>
+                    </div>
+                    <div class="relative group">
+                        <select
+                            class="appearance-none bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm rounded-lg px-4 pr-10 py-2 focus:ring-primary focus:border-primary">
+                            <option>All Categories</option>
+                            <option>Hostel</option>
+                            <option>IT</option>
+                            <option>Academic</option>
+                            <option>Infrastructure</option>
+                            <option>Transport</option>
+                        </select>
+                        <span
+                            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+                    </div>
+                    <div class="relative group">
+                        <select
+                            class="appearance-none bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm rounded-lg px-4 pr-10 py-2 focus:ring-primary focus:border-primary">
+                            <option>All Departments</option>
+                            <option>Hostel Management</option>
+                            <option>IT Services</option>
+                            <option>Registrar Office</option>
+                            <option>Estate Office</option>
+                        </select>
+                        <span
+                            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+                    </div>
+                    <div class="relative group">
+                        <select
+                            class="appearance-none bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm rounded-lg px-4 pr-10 py-2 focus:ring-primary focus:border-primary">
+                            <option>All Status</option>
+                            <option>Pending</option>
+                            <option>In Progress</option>
+                            <option>Resolved</option>
+                            <option>Rejected</option>
+                        </select>
+                        <span
+                            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+                    </div>
+                    <button class="ml-auto text-sm text-primary font-semibold hover:underline">Clear All</button>
+                </div>
+                <!-- Table Container -->
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">ID
+                                    </th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        Complaint Details</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        Student</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        Submitted On</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                        Priority</th>
+                                    <th
+                                        class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                                <!-- Row 1 -->
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-semibold text-slate-400">#CMP-1024</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-semibold">Slow WiFi in Library A</span>
+                                            <span class="text-xs text-slate-500">IT Department • Network Issues</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-[10px] font-bold">
+                                                JD</div>
+                                            <span class="text-sm">John Doe</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">Oct 24, 2023</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Pending</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                            <span class="text-xs font-medium uppercase">High</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary"
+                                                title="View Detail"><span
+                                                    class="material-symbols-outlined text-lg">visibility</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Assign To"><span
+                                                    class="material-symbols-outlined text-lg">person_add</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Delete"><span
+                                                    class="material-symbols-outlined text-lg">delete</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-semibold text-slate-400">#CMP-1025</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-semibold">Leaking pipe in Block B</span>
+                                            <span class="text-xs text-slate-500">Hostel Management • Plumbing</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-[10px] font-bold">
+                                                SS</div>
+                                            <span class="text-sm">Sarah Smith</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">Oct 23, 2023</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">In
+                                            Progress</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                            <span class="text-xs font-medium uppercase">Medium</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary"
+                                                title="View Detail"><span
+                                                    class="material-symbols-outlined text-lg">visibility</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Assign To"><span
+                                                    class="material-symbols-outlined text-lg">person_add</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Delete"><span
+                                                    class="material-symbols-outlined text-lg">delete</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-semibold text-slate-400">#CMP-1026</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-semibold">Missing grades in Portal</span>
+                                            <span class="text-xs text-slate-500">Academic Dept • Portal Error</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-[10px] font-bold">
+                                                MW</div>
+                                            <span class="text-sm">Mark Wilson</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">Oct 22, 2023</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Resolved</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                                            <span class="text-xs font-medium uppercase">Low</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary"
+                                                title="View Detail"><span
+                                                    class="material-symbols-outlined text-lg">visibility</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Assign To"><span
+                                                    class="material-symbols-outlined text-lg">person_add</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Delete"><span
+                                                    class="material-symbols-outlined text-lg">delete</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-semibold text-slate-400">#CMP-1027</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-semibold">Canteen Hygiene Issue</span>
+                                            <span class="text-xs text-slate-500">Estate Office • Hygiene</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-7 h-7 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 text-[10px] font-bold">
+                                                EL</div>
+                                            <span class="text-sm">Emily Lee</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">Oct 21, 2023</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Rejected</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                            <span class="text-xs font-medium uppercase">Medium</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary"
+                                                title="View Detail"><span
+                                                    class="material-symbols-outlined text-lg">visibility</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Assign To"><span
+                                                    class="material-symbols-outlined text-lg">person_add</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Delete"><span
+                                                    class="material-symbols-outlined text-lg">delete</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 5 -->
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-semibold text-slate-400">#CMP-1028</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-semibold">Library AC Not Cooling</span>
+                                            <span class="text-xs text-slate-500">Infrastructure • Maintenance</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-[10px] font-bold">
+                                                BT</div>
+                                            <span class="text-sm">Ben Taylor</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">Oct 20, 2023</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Pending</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                            <span class="text-xs font-medium uppercase">High</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary"
+                                                title="View Detail"><span
+                                                    class="material-symbols-outlined text-lg">visibility</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Assign To"><span
+                                                    class="material-symbols-outlined text-lg">person_add</span></button>
+                                            <button
+                                                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500"
+                                                title="Delete"><span
+                                                    class="material-symbols-outlined text-lg">delete</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div
+                        class="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <p class="text-sm text-slate-500">Showing <span
+                                class="font-semibold text-slate-900 dark:text-slate-100">1</span> to <span
+                                class="font-semibold text-slate-900 dark:text-slate-100">5</span> of <span
+                                class="font-semibold text-slate-900 dark:text-slate-100">124</span> results</p>
+                        <div class="flex items-center gap-2">
+                            <button
+                                class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
+                                disabled="">
+                                <span class="material-symbols-outlined text-lg">chevron_left</span>
+                            </button>
+                            <button class="w-8 h-8 rounded-lg bg-primary text-white text-sm font-semibold">1</button>
+                            <button
+                                class="w-8 h-8 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">2</button>
+                            <button
+                                class="w-8 h-8 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">3</button>
+                            <span class="px-1">...</span>
+                            <button
+                                class="w-8 h-8 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">25</button>
+                            <button
+                                class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors">
+                                <span class="material-symbols-outlined text-lg">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="storage.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>

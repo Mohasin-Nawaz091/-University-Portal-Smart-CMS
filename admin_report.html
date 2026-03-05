@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>University Admin - Analytics &amp; Reports</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside
+            class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 hidden lg:flex flex-col">
+            <div class="p-6 flex items-center gap-3">
+                <div class="bg-primary rounded-lg p-1.5">
+                    <span class="material-symbols-outlined text-white">school</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-tight">University Admin</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Management System</p>
+                </div>
+            </div>
+            <nav class="flex-1 px-4 space-y-1">
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="admin.html">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="admin_all_complaints.html">
+                    <span class="material-symbols-outlined">description</span>
+                    <span class="text-sm font-medium">All Complaints</span>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="admin_report.html">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">bar_chart</span>
+                    <span class="text-sm font-medium">Reports</span>
+                </a>
+                <div class="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
+                    <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                        href="user_profile.html">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="text-sm font-medium">Profile</span>
+                    </a>
+                </div>
+            </nav>
+            <div class="p-4 border-t border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                    <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden">
+                        <img alt="Admin avatar" class="w-full h-full object-cover"
+                            data-alt="University Administrator profile photo"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ8KgR47FZRYJor1MJL0rcriti_24mHNkg2raPVGxY0d3HPWMp1uODVMI6fiz3SD2qEVzmI2u2j18gNHtGiY_2qOrPY6HuNM6C5cQjnBCNuf29VZnXHHm7f0H5NLROKKJM9N0aGot00Jrey07UFdRMQnMAJXK9DnfLi78qpkLa1_eTQN_AUZpcfUrArm-B7eRwCfhRmPTeULWDshJ-mXVHCmQrcRGo2NVubEV6EjBDK00IPDnFVUM6TRspAnsrz_wPxZLZ3WP0" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-semibold truncate">Dr. Sarah Wilson</p>
+                        <p class="text-[10px] text-slate-500">Super Admin</p>
+                    </div>
+                    <button class="text-red-500 hover:text-red-700 logout-btn">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark overflow-y-auto">
+            <!-- Top Header -->
+            <header
+                class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10">
+                <div class="flex items-center gap-4">
+                    <h2 class="text-xl font-bold tracking-tight">Analytics &amp; Reports</h2>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                    <div
+                        class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer">
+                        <span class="material-symbols-outlined text-sm text-slate-500">calendar_today</span>
+                        <span>Last 30 Days</span>
+                        <span class="material-symbols-outlined text-sm text-slate-500">expand_more</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-lg">download</span>
+                        Export CSV
+                    </button>
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm shadow-primary/20">
+                        <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+                        Export PDF
+                    </button>
+                </div>
+            </header>
+            <!-- Page Content -->
+            <div class="p-8 space-y-8">
+                <!-- Metric Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="material-symbols-outlined p-2 bg-primary/10 text-primary rounded-lg">avg_time</span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Average Resolution Time
+                            </p>
+                            <h3 class="text-2xl font-bold mt-1">2.4 days</h3>
+                        </div>
+                        <div class="flex items-center gap-1 mt-4 text-xs font-medium text-red-500">
+                            <span class="material-symbols-outlined text-sm">trending_down</span>
+                            <span>-12% vs last month</span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="material-symbols-outlined p-2 bg-green-500/10 text-green-600 rounded-lg">sentiment_satisfied</span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Satisfaction Score</p>
+                            <h3 class="text-2xl font-bold mt-1">4.8/5</h3>
+                        </div>
+                        <div class="flex items-center gap-1 mt-4 text-xs font-medium text-green-600">
+                            <span class="material-symbols-outlined text-sm">trending_up</span>
+                            <span>+0.4% improvement</span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="material-symbols-outlined p-2 bg-amber-500/10 text-amber-600 rounded-lg">priority_high</span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Escalation Rate</p>
+                            <h3 class="text-2xl font-bold mt-1">5%</h3>
+                        </div>
+                        <div class="flex items-center gap-1 mt-4 text-xs font-medium text-green-600">
+                            <span class="material-symbols-outlined text-sm">arrow_downward</span>
+                            <span>1% decrease</span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="material-symbols-outlined p-2 bg-purple-500/10 text-purple-600 rounded-lg">account_balance</span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Active Department</p>
+                            <h3 class="text-xl font-bold mt-1">IT Infrastructure</h3>
+                        </div>
+                        <div class="flex items-center gap-1 mt-4 text-xs font-medium text-slate-400">
+                            <span>42% of total complaints</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Resolution Trends (Line Chart Placeholder) -->
+                <div
+                    class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-lg font-bold">Resolution Trends</h3>
+                            <p class="text-sm text-slate-500">Comparison between new complaints and resolutions</p>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex items-center gap-2">
+                                <span class="size-3 rounded-full bg-primary"></span>
+                                <span class="text-xs font-medium">New Complaints</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="size-3 rounded-full bg-green-500"></span>
+                                <span class="text-xs font-medium">Resolved</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="w-full h-80 relative flex items-end justify-between px-4 pb-8 border-b border-l border-slate-100 dark:border-slate-800">
+                        <!-- Simple visualization with SVG as we can't use external JS chart libs -->
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
+                            <span class="material-symbols-outlined text-[200px]">show_chart</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                            <div class="w-12 bg-primary/20 rounded-t-lg relative" style="height: 60%">
+                                <div class="absolute bottom-0 w-6 left-3 bg-primary rounded-t-lg" style="height: 80%">
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-400">Week 1</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                            <div class="w-12 bg-primary/20 rounded-t-lg relative" style="height: 45%">
+                                <div class="absolute bottom-0 w-6 left-3 bg-primary rounded-t-lg" style="height: 60%">
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-400">Week 2</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                            <div class="w-12 bg-primary/20 rounded-t-lg relative" style="height: 75%">
+                                <div class="absolute bottom-0 w-6 left-3 bg-primary rounded-t-lg" style="height: 95%">
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-400">Week 3</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                            <div class="w-12 bg-primary/20 rounded-t-lg relative" style="height: 40%">
+                                <div class="absolute bottom-0 w-6 left-3 bg-primary rounded-t-lg" style="height: 30%">
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-400">Week 4</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                            <div class="w-12 bg-primary/20 rounded-t-lg relative" style="height: 85%">
+                                <div class="absolute bottom-0 w-6 left-3 bg-primary rounded-t-lg" style="height: 90%">
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-400">Week 5</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Smaller Charts Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Complaints by Category (Pie Chart Mock) -->
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-bold mb-6">Complaints by Category</h3>
+                        <div class="flex items-center gap-8 h-64">
+                            <div class="relative size-48">
+                                <svg class="size-full -rotate-90" viewbox="0 0 32 32">
+                                    <circle cx="16" cy="16" fill="transparent" r="14" stroke="#e2e8f0" stroke-width="4">
+                                    </circle>
+                                    <circle cx="16" cy="16" fill="transparent" r="14" stroke="#2463eb"
+                                        stroke-dasharray="88 100" stroke-dashoffset="0" stroke-width="4"></circle>
+                                    <circle cx="16" cy="16" fill="transparent" r="14" stroke="#10b981"
+                                        stroke-dasharray="25 100" stroke-dashoffset="-45" stroke-width="4"></circle>
+                                    <circle cx="16" cy="16" fill="transparent" r="14" stroke="#f59e0b"
+                                        stroke-dasharray="15 100" stroke-dashoffset="-70" stroke-width="4"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-2xl font-bold">1,248</span>
+                                    <span class="text-[10px] text-slate-500">Total Cases</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="size-2.5 rounded-full bg-primary"></span>
+                                        <span class="text-sm font-medium">IT Support</span>
+                                    </div>
+                                    <span class="text-sm font-bold">45%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="size-2.5 rounded-full bg-green-500"></span>
+                                        <span class="text-sm font-medium">Academic</span>
+                                    </div>
+                                    <span class="text-sm font-bold">25%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="size-2.5 rounded-full bg-amber-500"></span>
+                                        <span class="text-sm font-medium">Hostel/Living</span>
+                                    </div>
+                                    <span class="text-sm font-bold">15%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="size-2.5 rounded-full bg-slate-300"></span>
+                                        <span class="text-sm font-medium">Others</span>
+                                    </div>
+                                    <span class="text-sm font-bold">15%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Department Performance (Bar Chart Mock) -->
+                    <div
+                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-bold mb-6">Department Performance</h3>
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-medium">IT Infrastructure</span>
+                                    <span class="text-slate-500">92% Resolution Rate</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-medium">Academic Affairs</span>
+                                    <span class="text-slate-500">85% Resolution Rate</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-medium">Hostel Management</span>
+                                    <span class="text-slate-500">78% Resolution Rate</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary" style="width: 78%"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-medium">Student Welfare</span>
+                                    <span class="text-slate-500">88% Resolution Rate</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary" style="width: 88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Monthly Summary Table -->
+                <div
+                    class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                        <h3 class="text-lg font-bold">Recent Monthly Summary</h3>
+                        <button class="text-primary text-sm font-semibold hover:underline">View All Months</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr
+                                    class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+                                    <th class="px-6 py-4">Month</th>
+                                    <th class="px-6 py-4">Total Complaints</th>
+                                    <th class="px-6 py-4">Resolved Cases</th>
+                                    <th class="px-6 py-4">Resolution Rate</th>
+                                    <th class="px-6 py-4">Avg. Resolution Time</th>
+                                    <th class="px-6 py-4">CSAT</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-6 py-4 font-semibold">October 2023</td>
+                                    <td class="px-6 py-4 text-sm">482</td>
+                                    <td class="px-6 py-4 text-sm">461</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2 py-1 bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 rounded-lg text-xs font-bold">95.6%</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">2.4 days</td>
+                                    <td class="px-6 py-4 text-sm font-medium">4.8/5</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-6 py-4 font-semibold">September 2023</td>
+                                    <td class="px-6 py-4 text-sm">524</td>
+                                    <td class="px-6 py-4 text-sm">498</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2 py-1 bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 rounded-lg text-xs font-bold">95.0%</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">2.8 days</td>
+                                    <td class="px-6 py-4 text-sm font-medium">4.6/5</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-6 py-4 font-semibold">August 2023</td>
+                                    <td class="px-6 py-4 text-sm">312</td>
+                                    <td class="px-6 py-4 text-sm">295</td>
+                                    <td class="px-6 py-4">
+                                        <span
+                                            class="px-2 py-1 bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-bold">94.5%</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">3.1 days</td>
+                                    <td class="px-6 py-4 text-sm font-medium">4.5/5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="storage.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+    <script src="notifications.js"></script>
+</body>
+
+</html>
