@@ -1,14 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // Auth for department admin
-    const user = requireAuth(['dept_admin']);
+    const user = requireAuth(['department_admin']);
     if (!user) return;
 
     // Sidebar admin details
-    const deptAdminNameEl = document.querySelector('header .text-sm.font-semibold.text-slate-900');
-    if (deptAdminNameEl) deptAdminNameEl.textContent = user.name;
-    const deptAdminRoleEl = document.querySelector('header .text-xs.text-slate-500');
-    if (deptAdminRoleEl) deptAdminRoleEl.textContent = "Dept. Admin, " + user.department;
+    const sidebarName = document.getElementById('sidebarName');
+    const sidebarId = document.getElementById('sidebarId');
+    const sidebarAvatar = document.getElementById('sidebarAvatar');
+
+    if (sidebarName) sidebarName.textContent = user.name || "Admin";
+    if (sidebarId) sidebarId.textContent = user.department ? "Dept. Admin, " + user.department : (user.role === 'admin' ? "System Admin" : "User ID: " + user.id);
+    if (sidebarAvatar && user.avatar) {
+        sidebarAvatar.src = user.avatar.startsWith('http') ? user.avatar : `${user.avatar}`;
+    }
 
     if (window.location.pathname.endsWith('department_admin.html')) {
         renderDeptDashboardStats(user);
@@ -18,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function renderDeptDashboardStats(user) {
-    const allComplaints = getComplaints().filter(c => c.department === user.department && c.status !== 'Pending');
+async function renderDeptDashboardStats(user) {
+    const allComplaints = (await getComplaints()).filter(c => c.status !== 'Pending');
 
     const assignedCount = allComplaints.length;
     let pendingActionCount = allComplaints.filter(c => c.status === 'Assigned').length;
@@ -38,8 +43,8 @@ function renderDeptDashboardStats(user) {
     if (titleEl) titleEl.textContent = `Department Dashboard - ${user.department}`;
 }
 
-function renderDeptRecentComplaints(user) {
-    const allComplaints = getComplaints().filter(c => c.department === user.department && c.status !== 'Pending').sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+async function renderDeptRecentComplaints(user) {
+    const allComplaints = (await getComplaints()).filter(c => c.status !== 'Pending').sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
     const tbody = document.querySelector('tbody');
     if (!tbody) return;
 
@@ -100,7 +105,7 @@ function renderDeptRecentComplaints(user) {
     });
 }
 
-function initDeptUpdateComplaint(user) {
+async function initDeptUpdateComplaint(user) {
     const urlParams = new URLSearchParams(window.location.search);
     const complaintId = urlParams.get('id');
 
@@ -110,11 +115,38 @@ function initDeptUpdateComplaint(user) {
         return;
     }
 
-    const complaint = getComplaintById(complaintId);
-    if (!complaint || complaint.department !== user.department) {
-        alert("Complaint not found or unauthorized.");
-        window.location.href = 'department_admin.html';
-        return;
+    // Header title for subtitle clearing
+    const pageSubtitle = document.querySelector('.mb-8 p');
+
+    // Initial Clear/Placeholders
+    if (pageSubtitle) pageSubtitle.innerHTML = '<span class="text-primary font-semibold">Loading...</span>';
+    const nameEl = document.querySelector('.flex.items-center.gap-3 div p.text-sm.font-semibold');
+    const descEl = document.querySelector('.p-4.bg-slate-50 p');
+    if (nameEl) nameEl.textContent = '...';
+    if (descEl) descEl.textContent = 'Loading complaint details...';
+
+    const complaint = await getComplaintById(complaintId);
+
+    // Flexible matching for department name
+    const matchesDept = (complaint && user.department &&
+        (complaint.department.toLowerCase().includes(user.department.split(' ')[0].toLowerCase()) ||
+            user.department.toLowerCase().includes(complaint.department.split(' ')[0].toLowerCase()) ||
+            complaint.department === 'General' ||
+            complaint.department === 'Not Assigned'));
+
+    if (!complaint || !matchesDept) {
+        console.warn('Access check:', { complaintDept: complaint?.department, userDept: user.department });
+        // Only block if it's assigned to a COMPETELY different department
+        const isVeryDifferent = (complaint.department !== 'General' &&
+            complaint.department !== 'Not Assigned' &&
+            !complaint.department.toLowerCase().includes(user.department.split(' ')[0].toLowerCase()) &&
+            !user.department.toLowerCase().includes(complaint.department.split(' ')[0].toLowerCase()));
+
+        if (isVeryDifferent) {
+            alert("Access denied: This complaint is assigned to " + (complaint.department || 'another department'));
+            window.location.href = 'department_admin.html';
+            return;
+        }
     }
 
     // Header Links
@@ -123,25 +155,25 @@ function initDeptUpdateComplaint(user) {
     const headerTitle = document.querySelector('header h2');
     if (headerTitle) headerTitle.textContent = `Complaints / CMP-${complaint.id}`;
 
-    // Title Section
-    const pageTitle = document.querySelector('.mb-8 h1');
-    const pageSubtitle = document.querySelector('.mb-8 p');
+    // Update Title Section with real data
     if (pageSubtitle) {
         pageSubtitle.innerHTML = `<span class="font-semibold text-primary">Case #CMP-${complaint.id}:</span> ${complaint.title}`;
     }
 
-    // Summary Card
-    const nameEl = document.querySelector('.flex.items-center.gap-3 div p.text-sm.font-semibold');
+    // Update Summary Card with real data
     const dateEl = document.querySelector('.flex.items-center.gap-3 div p.text-xs.text-slate-500');
     if (nameEl) nameEl.textContent = complaint.studentName;
     if (dateEl) dateEl.textContent = `Submitted: ${new Date(complaint.createdDate).toLocaleDateString()}`;
-
-    const descEl = document.querySelector('.p-4.bg-slate-50 p');
     if (descEl) descEl.textContent = `"${complaint.description}"`;
 
     const statusEl = document.querySelectorAll('.grid.grid-cols-2.gap-4 p.text-sm.font-medium')[0];
     const deptEl = document.querySelectorAll('.grid.grid-cols-2.gap-4 p.text-sm.font-medium')[1];
-    if (statusEl) statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span> ${complaint.status}`;
+    if (statusEl) {
+        let dotColor = 'bg-yellow-400';
+        if (complaint.status === 'Resolved') dotColor = 'bg-emerald-500';
+        if (complaint.status === 'Assigned') dotColor = 'bg-amber-500';
+        statusEl.innerHTML = `<span class="w-2 h-2 rounded-full ${dotColor}"></span> ${complaint.status}`;
+    }
     if (deptEl) deptEl.textContent = complaint.department;
 
     // Timeline elements
@@ -202,32 +234,31 @@ function initDeptUpdateComplaint(user) {
         const cancelBtn = form.querySelector('button[type="button"]');
         if (cancelBtn) cancelBtn.addEventListener('click', () => window.location.href = 'department_admin.html');
 
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const selectedStatusText = statusSelect.options[statusSelect.selectedIndex].text;
-            const noteText = document.querySelector('textarea').value;
+            const noteText = document.querySelector('textarea').value || '';
 
             complaint.status = selectedStatusText;
             complaint.priority = prioritySelect.options[prioritySelect.selectedIndex].value;
 
-            if (noteText) {
-                complaint.departmentNotes = complaint.departmentNotes || [];
-                complaint.departmentNotes.push(noteText);
-            }
+            // Use the note text for the timeline and backend comment
+            const timelineMessage = noteText ? `Note: ${noteText}` : `Status updated to ${selectedStatusText}`;
 
             complaint.timeline = complaint.timeline || [];
             complaint.timeline.push({
                 type: 'dept_admin',
                 name: user.name,
                 date: new Date().toISOString(),
-                message: `Status updated to ${selectedStatusText}`
+                message: timelineMessage
             });
 
-            updateComplaint(complaint.id, complaint);
+            // Pass the complaint with the new timeline item
+            await updateComplaint(complaint.id, complaint);
 
             // Notify student
-            addNotification(complaint.userId, `Your complaint status has been updated to ${selectedStatusText}.`, `view_complaints.html?id=${complaint.id}`);
+            await addNotification(complaint.userId, `Your complaint status has been updated to ${selectedStatusText}.`, `view_complaints.html?id=${complaint.id}`);
 
             alert("Complaint updated successfully!");
             window.location.href = 'department_admin.html';

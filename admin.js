@@ -1,14 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // Auth for admin
     const user = requireAuth(['admin']);
     if (!user) return;
 
     // Sidebar admin details
-    const adminNameEl = document.querySelector('aside .text-xs.font-semibold.truncate');
-    if (adminNameEl) adminNameEl.textContent = user.name;
-    const adminRoleEl = document.querySelector('aside .text-\\[10px\\].text-slate-500.truncate');
-    if (adminRoleEl) adminRoleEl.textContent = "System Administrator";
+    const adminNameEl = document.getElementById('sidebarName');
+    const adminRoleEl = document.getElementById('sidebarId');
+    const adminAvatarEl = document.getElementById('sidebarAvatar');
+
+    if (adminNameEl) adminNameEl.textContent = user.name || "System Admin";
+    if (adminRoleEl) adminRoleEl.textContent = user.role === 'admin' ? "System Administrator" : (user.department || "Admin");
+    if (adminAvatarEl && user.avatar) {
+        adminAvatarEl.src = user.avatar.startsWith('http') ? user.avatar : `${user.avatar}`;
+    }
 
     if (window.location.pathname.endsWith('admin.html') || window.location.pathname.endsWith('admin-dashboard.html')) {
         renderAdminDashboardStats();
@@ -23,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-function renderAdminDashboardStats() {
-    const allComplaints = getComplaints();
+async function renderAdminDashboardStats() {
+    const allComplaints = (await getComplaints());
 
     // Total
     const statContainers = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-3.lg\\:grid-cols-5 .text-2xl.font-bold');
@@ -39,10 +44,31 @@ function renderAdminDashboardStats() {
     // Category Breakdown Center text
     const categoryTotalEl = document.querySelector('.relative.flex-1.flex.items-center.justify-center .text-3xl.font-bold');
     if (categoryTotalEl) categoryTotalEl.textContent = allComplaints.length;
+
+    // Update Category Breakdown percentages if they exist
+    const categoryRows = document.querySelectorAll('.space-y-2.mt-4 .flex.items-center.justify-between');
+    if (categoryRows.length > 0) {
+        const categories = {};
+        allComplaints.forEach(c => {
+            categories[c.category] = (categories[c.category] || 0) + 1;
+        });
+
+        const sortedCats = Object.entries(categories).sort((a, b) => b[1] - a[1]);
+        categoryRows.forEach((row, i) => {
+            if (sortedCats[i]) {
+                const [cat, count] = sortedCats[i];
+                const pct = Math.round((count / allComplaints.length) * 100);
+                row.querySelector('.text-xs.font-medium').textContent = cat;
+                row.querySelector('.text-xs.font-bold').textContent = pct + '%';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
 }
 
-function renderAdminRecentComplaints() {
-    const allComplaints = getComplaints().sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)).slice(0, 5);
+async function renderAdminRecentComplaints() {
+    const allComplaints = (await getComplaints()).sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)).slice(0, 5);
     const tbody = document.querySelector('tbody');
     if (!tbody) return;
 
@@ -67,7 +93,7 @@ function renderAdminRecentComplaints() {
 
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer';
-        tr.onclick = () => window.location.href = `admin_assign_complain.html?id=${complaint.id}`;
+        tr.onclick = () => window.location.href = `view_complaints.html?id=${complaint.id}`;
 
         tr.innerHTML = `
             <td class="px-6 py-4 text-xs font-bold text-slate-500">#CMP-${complaint.id}</td>
@@ -90,15 +116,15 @@ function renderAdminRecentComplaints() {
                 </span>
             </td>
             <td class="px-6 py-4 text-right">
-                <button onclick="event.stopPropagation(); window.location.href='admin_assign_complain.html?id=${complaint.id}';" class="px-3 py-1 bg-primary text-white font-bold rounded hover:bg-primary/90 text-xs shadow">Assign/View</button>
+                <button onclick="event.stopPropagation(); window.location.href='view_complaints.html?id=${complaint.id}';" class="px-3 py-1 bg-primary text-white font-bold rounded hover:bg-primary/90 text-xs shadow">View Details</button>
             </td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-function renderAdminAllComplaints() {
-    const allComplaints = getComplaints().sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+async function renderAdminAllComplaints() {
+    const allComplaints = (await getComplaints()).sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
     const tbody = document.querySelector('tbody');
     if (!tbody) return;
 
@@ -124,7 +150,7 @@ function renderAdminAllComplaints() {
 
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors cursor-pointer';
-        tr.onclick = () => window.location.href = `admin_assign_complain.html?id=${complaint.id}`;
+        tr.onclick = () => window.location.href = `view_complaints.html?id=${complaint.id}`;
 
         tr.innerHTML = `
             <td class="px-6 py-4 text-sm font-semibold text-slate-400">#CMP-${complaint.id}</td>
@@ -152,7 +178,7 @@ function renderAdminAllComplaints() {
             </td>
             <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
-                    <button onclick="event.stopPropagation(); window.location.href='admin_assign_complain.html?id=${complaint.id}';" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary" title="View/Assign"><span class="material-symbols-outlined text-lg">visibility</span></button>
+                    <button onclick="event.stopPropagation(); window.location.href='view_complaints.html?id=${complaint.id}';" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-primary" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
                     <button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-500" title="Delete" onclick="event.stopPropagation(); if(confirm('Are you sure you want to delete this complaint?')){ deleteComplaint(${complaint.id}); location.reload(); }"><span class="material-symbols-outlined text-lg">delete</span></button>
                 </div>
             </td>
@@ -166,7 +192,7 @@ function renderAdminAllComplaints() {
     }
 }
 
-function initAdminAssignComplaint() {
+async function initAdminAssignComplaint() {
     const urlParams = new URLSearchParams(window.location.search);
     const complaintId = urlParams.get('id');
 
@@ -176,7 +202,7 @@ function initAdminAssignComplaint() {
         return;
     }
 
-    const complaint = getComplaintById(complaintId);
+    const complaint = await getComplaintById(complaintId);
     if (!complaint) {
         alert("Complaint not found.");
         window.history.back();
@@ -190,7 +216,7 @@ function initAdminAssignComplaint() {
     const deptSelect = document.querySelector('select');
     if (deptSelect) {
         deptSelect.innerHTML = '<option value="" disabled selected>Select a department...</option>';
-        getDepartments().forEach(d => {
+        (await getDepartments()).forEach(d => {
             const opt = document.createElement('option');
             opt.value = d.toLowerCase();
             opt.textContent = d;
@@ -219,7 +245,7 @@ function initAdminAssignComplaint() {
             btn.className = 'px-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-primary transition-all';
         }
 
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             priorityBtns.forEach(b => b.className = 'px-3 py-2 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-primary transition-all');
             btn.className = 'px-3 py-2 text-xs font-bold rounded-lg border-2 border-primary bg-primary/5 text-primary';
             selectedPriority = btn.textContent.toLowerCase();
@@ -231,64 +257,82 @@ function initAdminAssignComplaint() {
         noteBox.value = complaint.adminNotes[complaint.adminNotes.length - 1];
     }
 
-    const closeBtn = document.querySelector('button .material-symbols-outlined').parentElement; // Close button
+    const closeBtn = document.querySelector('button .material-symbols-outlined')?.parentElement;
     if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            window.history.back();
-        });
+        closeBtn.addEventListener('click', () => window.history.back());
     }
     const cancelBtn = document.querySelector('.px-6.py-4.bg-slate-50.flex button');
     if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            window.history.back();
-        });
+        cancelBtn.addEventListener('click', () => window.history.back());
     }
 
-    const assignBtn = document.querySelectorAll('.px-6.py-4.bg-slate-50.flex button')[1];
+    // Display Timeline/Inspection info if it exists
+    const timelineContainer = document.createElement('div');
+    timelineContainer.className = 'mt-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700';
+    timelineContainer.innerHTML = '<h4 class="text-sm font-bold mb-3 flex items-center gap-2"><span class="material-symbols-outlined text-sm">history</span> Activity & Inspection History</h4>';
+
+    const timelineList = document.createElement('div');
+    timelineList.className = 'space-y-3';
+
+    const activities = complaint.timeline || [];
+    if (activities.length === 0) {
+        timelineList.innerHTML = '<p class="text-xs text-slate-500 italic">No activity recorded yet.</p>';
+    } else {
+        activities.forEach(act => {
+            const date = new Date(act.date).toLocaleString();
+            timelineList.innerHTML += `
+                <div class="text-xs border-l-2 border-primary pl-3 py-1">
+                    <p class="font-bold text-slate-700 dark:text-slate-300">${act.message}</p>
+                    <p class="text-[10px] text-slate-500">${act.name} • ${date}</p>
+                </div>
+            `;
+        });
+    }
+    timelineContainer.appendChild(timelineList);
+    noteBox.parentElement.parentElement.appendChild(timelineContainer);
+
+    const assignBtn = document.querySelectorAll('.px-6.py-4.bg-slate-50.flex button')[2] || document.querySelectorAll('.px-6.py-4.bg-slate-50.flex button')[1];
     if (assignBtn) {
-        assignBtn.addEventListener('click', () => {
+        if (complaint.status !== 'Pending') {
+            assignBtn.innerHTML = '<span class="material-symbols-outlined text-lg">update</span> Update Assignment';
+        }
+
+        assignBtn.addEventListener('click', async () => {
             if (!deptSelect.value) {
                 alert("Please select a department");
                 return;
             }
 
-            const oldStatus = complaint.status;
-            complaint.status = "Assigned";
-            complaint.department = deptSelect.options[deptSelect.selectedIndex].text;
-            complaint.priority = selectedPriority;
+            assignBtn.disabled = true;
+            assignBtn.textContent = "Processing...";
+
+            const updateData = {
+                ...complaint,
+                status: "Assigned",
+                department: deptSelect.options[deptSelect.selectedIndex].text,
+                priority: selectedPriority
+            };
 
             if (noteBox.value) {
-                complaint.adminNotes = complaint.adminNotes || [];
-                complaint.adminNotes.push(noteBox.value);
+                updateData.adminNotes = updateData.adminNotes || [];
+                updateData.adminNotes.push(noteBox.value);
             }
 
-            complaint.timeline = complaint.timeline || [];
-            complaint.timeline.push({
-                type: 'admin',
-                name: 'System Admin',
-                date: new Date().toISOString(),
-                message: `Assigned to ${complaint.department} with ${selectedPriority} priority.`
-            });
-
-            updateComplaint(complaint.id, complaint);
-
-            // Create notification for department
-            const deptAdmins = getUsers().filter(u => u.department === complaint.department);
-            deptAdmins.forEach(da => {
-                addNotification(da.id, `New complaint assigned: ${complaint.title}`, `department_admin.html`);
-            });
-
-            // Notification for student
-            addNotification(complaint.userId, `Your complaint has been assigned to ${complaint.department}`, `view_complaints.html?id=${complaint.id}`);
-
-            alert("Complaint assigned successfully!");
-            window.location.href = 'admin_all_complaints.html';
+            try {
+                await updateComplaint(complaint.id, updateData);
+                alert("Complaint updated successfully!");
+                window.location.href = 'admin_all_complaints.html';
+            } catch (err) {
+                alert("Error updating complaint");
+                assignBtn.disabled = false;
+                assignBtn.innerHTML = '<span class="material-symbols-outlined text-lg">assignment_ind</span> Assign Complaint';
+            }
         });
     }
 }
 
-function renderAdminReports() {
-    const allComplaints = getComplaints();
+async function renderAdminReports() {
+    const allComplaints = (await getComplaints());
     const categories = {};
 
     allComplaints.forEach(c => {

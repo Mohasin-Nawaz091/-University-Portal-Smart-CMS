@@ -1,54 +1,129 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const user = getCurrentUser();
     if (!user) {
         window.location.href = 'login.html';
         return;
     }
 
-    // Populate Sidebar & Header
-    const dashboardLink = document.querySelectorAll('nav a')[0];
-    const headerTitle = document.querySelector('header p.text-sm.font-semibold');
-    const headerRole = document.querySelector('header p.text-xs.text-slate-500');
+    // Global logic for notification bell
+    setupNotificationBell(user);
 
-    let dashboardUrl = 'student_dashboard.html';
-    let roleText = 'Student';
-
-    if (user.role === 'admin') {
-        dashboardUrl = 'admin.html';
-        roleText = 'System Administrator';
-    } else if (user.role === 'dept_admin') {
-        dashboardUrl = 'department_admin.html';
-        roleText = 'Department Admin';
-    }
-
-    if (dashboardLink) dashboardLink.href = dashboardUrl;
-    if (headerTitle) headerTitle.textContent = user.name;
-    if (headerRole) headerRole.textContent = roleText;
-
-    // Render Notifications
+    // Render Notifications Page if on the correct UI
     if (window.location.pathname.endsWith('admin_notification_ui.html')) {
         renderNotificationsPage(user);
-    } else {
-        // Global logic for notification bell
-        const bellIcon = document.querySelector('button .material-symbols-outlined:contains("notifications")');
-        // Actually this is complex without jQuery. Let's just attach redirect to any button wrapping a notifications icon.
-        const bells = document.querySelectorAll('.material-symbols-outlined');
-        bells.forEach(b => {
-            if (b.textContent.trim() === 'notifications') {
-                const btn = b.closest('button') || b.parentElement;
-                if (btn && btn.tagName === 'BUTTON' || btn.tagName === 'DIV') {
-                    btn.style.cursor = 'pointer';
-                    btn.addEventListener('click', () => {
-                        window.location.href = 'admin_notification_ui.html';
-                    });
-                }
-            }
-        });
     }
 });
 
-function renderNotificationsPage(user) {
-    const notifications = getUserNotifications(user.id) || [];
+function setupNotificationBell(user) {
+    // Attach listener to any element representing the notification bell
+    const bells = document.querySelectorAll('.material-symbols-outlined');
+    bells.forEach(b => {
+        if (b.textContent.trim() === 'notifications') {
+            const btn = b.closest('button') || b.parentElement;
+            if (btn) {
+                // Ensure relative positioning for badge
+                if (!btn.classList.contains('relative')) btn.classList.add('relative');
+                btn.style.cursor = 'pointer';
+
+                // Add/Update badge
+                initBellBadge(btn, user);
+
+                // Re-clone to remove old listeners if any, then add fresh one
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+
+                newBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleNotificationDropdown(newBtn, user);
+                });
+            }
+        }
+    });
+}
+
+async function initBellBadge(btn, user) {
+    const notifications = await getUserNotifications(user.id) || [];
+    const unread = notifications.filter(n => !n.read).length;
+
+    let badge = btn.querySelector('.notif-badge');
+    if (unread > 0) {
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'notif-badge absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900';
+            btn.appendChild(badge);
+        }
+    } else if (badge) {
+        badge.remove();
+    }
+}
+
+async function toggleNotificationDropdown(anchor, user) {
+    let dropdown = document.getElementById('notif-dropdown');
+    if (dropdown) {
+        dropdown.remove();
+        return;
+    }
+
+    dropdown = document.createElement('div');
+    dropdown.id = 'notif-dropdown';
+    dropdown.className = 'absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-[100] overflow-hidden';
+
+    // Position dropdown under anchor if it's not already absolute
+    const rect = anchor.getBoundingClientRect();
+    dropdown.style.top = (rect.bottom + window.scrollY) + 'px';
+    dropdown.style.left = (rect.right - 320 + window.scrollX) + 'px';
+    dropdown.style.position = 'absolute';
+
+    dropdown.innerHTML = `
+        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 class="font-bold text-sm">Notifications</h3>
+            <a href="admin_notification_ui.html" class="text-xs text-primary hover:underline">View All</a>
+        </div>
+        <div id="notif-list-mini" class="max-h-80 overflow-y-auto">
+            <div class="p-4 text-center text-slate-500 text-sm">Loading...</div>
+        </div>
+    `;
+
+    document.body.appendChild(dropdown);
+
+    // Prevent closing when clicking inside
+    dropdown.addEventListener('click', (e) => e.stopPropagation());
+
+    // Close on click outside
+    const closeHandler = () => {
+        dropdown.remove();
+        document.removeEventListener('click', closeHandler);
+    };
+    setTimeout(() => document.addEventListener('click', closeHandler), 10);
+
+    // Fetch and populate
+    const notifications = await getUserNotifications(user.id) || [];
+    const listMini = document.getElementById('notif-list-mini');
+    if (listMini) {
+        listMini.innerHTML = '';
+        if (notifications.length === 0) {
+            listMini.innerHTML = '<div class="p-4 text-center text-slate-500 text-sm">No notifications</div>';
+        } else {
+            [...notifications].reverse().slice(0, 5).forEach(n => {
+                const item = document.createElement('div');
+                item.className = `p-4 border-b border-slate-50 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors ${n.read ? 'opacity-60' : ''}`;
+                item.innerHTML = `
+                    <p class="text-xs font-semibold text-slate-900 dark:text-slate-100">${n.message}</p>
+                    <p class="text-[10px] text-slate-400 mt-1 uppercase">${new Date(n.createdDate).toLocaleTimeString()}</p>
+                `;
+                item.onclick = async () => {
+                    await markNotificationRead(n.id);
+                    window.location.href = n.link || '#';
+                };
+                listMini.appendChild(item);
+            });
+        }
+    }
+}
+
+async function renderNotificationsPage(user) {
+    const notifications = await getUserNotifications(user.id) || [];
 
     // Unread count
     const unreadCount = notifications.filter(n => !n.read).length;
@@ -101,8 +176,8 @@ function renderNotificationsPage(user) {
 
     const markReadBtn = document.querySelector('button.text-primary.hover\\:underline');
     if (markReadBtn) {
-        markReadBtn.addEventListener('click', () => {
-            markAllNotificationsAsRead(user.id);
+        markReadBtn.addEventListener('click', async () => {
+            await markAllNotificationsAsRead(user.id);
             window.location.reload();
         });
     }

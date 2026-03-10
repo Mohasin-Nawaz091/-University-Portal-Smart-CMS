@@ -64,33 +64,30 @@
                 </div>
             </div>
             <nav class="flex-1 px-4 space-y-1 mt-4">
-                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    href="#">
+                <a id="dashboard-nav-link"
+                    class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    href="student_dashboard.html">
                     <span class="material-symbols-outlined">dashboard</span>
                     <span class="text-sm font-medium">Dashboard</span>
                 </a>
                 <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    href="#">
+                    href="my_complaints.html">
                     <span class="material-symbols-outlined">description</span>
-                    <span class="text-sm font-medium">Complaints</span>
-                </a>
-                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    href="#">
-                    <span class="material-symbols-outlined">bar_chart</span>
-                    <span class="text-sm font-medium">Reports</span>
-                </a>
-                <a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors"
-                    href="#">
-                    <span class="material-symbols-outlined">person</span>
-                    <span class="text-sm font-medium">Profile</span>
-                </a>
-                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    href="#">
-                    <span class="material-symbols-outlined">settings</span>
-                    <span class="text-sm font-medium">Settings</span>
+                    <span class="text-sm font-medium">My Complaints</span>
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+                <div
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group mb-2">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                        <img id="sidebarAvatar" class="w-full h-full object-cover"
+                            src="https://via.placeholder.com/150" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p id="sidebarName" class="text-sm font-semibold truncate">Loading...</p>
+                        <p id="sidebarEmail" class="text-xs text-slate-500 truncate">Loading...</p>
+                    </div>
+                </div>
                 <button
                     class="logout-btn flex items-center gap-3 px-3 py-2 w-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer">
                     <span class="material-symbols-outlined">logout</span>
@@ -114,12 +111,12 @@
                     <div class="h-8 w-px bg-slate-200 dark:border-slate-800 mx-2"></div>
                     <div class="flex items-center gap-3">
                         <div class="text-right hidden sm:block">
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Alex Johnson</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Student</p>
+                            <p id="headerName" class="text-sm font-semibold text-slate-900 dark:text-white">Loading...
+                            </p>
+                            <p id="headerRole" class="text-xs text-slate-500 dark:text-slate-400">Loading...</p>
                         </div>
-                        <img class="h-10 w-10 rounded-full object-cover border-2 border-primary/20"
-                            data-alt="Professional portrait of a male student"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwLSJ_S38lQwwxDiMjWknoASMEnnjBs2sqaOMKE0XYIF_4xrH3dtGyDagtU37KY47W3A0DQoOA5Y23O0EpIN6dOf2883JfQMIivNDujaS_iW-VngLmI4bzLalbY9Xpo-SMScwlU8iJ1evH8GkH7QXahS9sM1pq1c7iiBbcq5zZYLacLuJwjimrWJBdHlFVY0pJ2GSCZ8-CkxB5mHA_zMNtvp7mqMCHKYGf40vlrAhhyCIOs8ijnXLiLqQxuQaGpounZdt3Tp79" />
+                        <img id="headerAvatar" class="h-10 w-10 rounded-full object-cover border-2 border-primary/20"
+                            src="https://via.placeholder.com/150" />
                     </div>
                 </div>
             </header>
@@ -130,25 +127,28 @@
                     class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
                     <div class="flex flex-col md:flex-row items-center gap-6">
                         <div class="relative group">
-                            <img class="h-24 w-24 md:h-32 md:w-32 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800 shadow-md"
-                                data-alt="Enlarged profile picture of Alex Johnson"
+                            <img id="profileImage"
+                                class="h-24 w-24 md:h-32 md:w-32 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800 shadow-md"
+                                data-alt="Enlarged profile picture of user"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9WkC7bpShhzAWMMulO9RHZBAmF5kK5kFLeCbZ1fHiS3tA4Qsl7acDOc7UVfjc-UAwNJ7-hOOyUmUdl007Kqm-pY6Hn4oESZHVoJ0GhYl3nXpbohQtW52MkTE_07AWhalQXMCvw-qH_J2FuQPCy8XNO0KZHysx_yf28AVTXllT4uPoaQcXzSkJUjWffBrfPCbh2Ri21uVVUW065SQvusq02EzZnhgJDUB7WoAqreHxoFjXc_oYvOVgd9vGMdhUyWn67mWV_XxJ" />
-                            <button
-                                class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition-transform hover:scale-105">
+                            <label for="avatarUpload"
+                                class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-transform hover:scale-105">
                                 <span class="material-symbols-outlined text-sm">photo_camera</span>
-                            </button>
+                            </label>
+                            <input type="file" id="avatarUpload" class="hidden" accept="image/*">
                         </div>
                         <div class="text-center md:text-left flex-1">
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Alex Johnson</h3>
+                            <h3 id="bannerName" class="text-2xl font-bold text-slate-900 dark:text-white">Loading...
+                            </h3>
                             <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-2">
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
                                     <span class="material-symbols-outlined text-xs mr-1">school</span>
-                                    Student
+                                    <span id="bannerRole">Loading...</span>
                                 </span>
                                 <span class="inline-flex items-center text-sm text-slate-500 dark:text-slate-400">
                                     <span class="material-symbols-outlined text-sm mr-1">mail</span>
-                                    alex.johnson@university.edu
+                                    <span id="bannerEmail">Loading...</span>
                                 </span>
                             </div>
                         </div>
@@ -180,41 +180,47 @@
                                 <div class="space-y-2">
                                     <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Full
                                         Name</label>
-                                    <input
+                                    <input id="inputName"
                                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                        type="text" value="Alex Johnson" />
+                                        type="text" value="" />
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Student
                                         ID</label>
-                                    <input
+                                    <input id="inputId"
                                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-500 text-sm cursor-not-allowed"
-                                        disabled="" type="text" value="U2024-88912" />
+                                        readonly type="text" value="" />
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Email
                                         Address</label>
-                                    <input
+                                    <input id="inputEmail"
                                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                        type="email" value="alex.johnson@university.edu" />
+                                        type="email" value="" />
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Phone
                                         Number</label>
-                                    <input
+                                    <input id="inputPhone"
                                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
-                                        type="tel" value="+1 (555) 000-1234" />
+                                        type="tel" value="" />
                                 </div>
                                 <div class="md:col-span-2 space-y-2">
                                     <label
                                         class="text-sm font-medium text-slate-700 dark:text-slate-300">Department</label>
-                                    <select
-                                        class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm">
-                                        <option>Computer Science &amp; Engineering</option>
-                                        <option>Information Technology</option>
-                                        <option>Business Administration</option>
-                                        <option>Mechanical Engineering</option>
-                                    </select>
+                                    <div id="deptDisplayContainer">
+                                        <select id="inputDepartment"
+                                            class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-500 text-sm cursor-not-allowed"
+                                            disabled>
+                                            <option value="">Select Department</option>
+                                            <option value="BSSE">BSSE</option>
+                                            <option value="BSAI">BSAI</option>
+                                            <option value="BSCS">BSCS</option>
+                                            <option value="BSDS">BSDS</option>
+                                            <option value="BBA">BBA</option>
+                                            <option value="Business Analytics">Business Analytics</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </form>
                             <div class="mt-8 flex gap-3 justify-end">
@@ -237,7 +243,7 @@
                                     <div class="space-y-2">
                                         <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Current
                                             Password</label>
-                                        <input
+                                        <input id="currentPassword"
                                             class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
                                             placeholder="••••••••" type="password" />
                                     </div>
@@ -245,20 +251,20 @@
                                     <div class="space-y-2">
                                         <label class="text-sm font-medium text-slate-700 dark:text-slate-300">New
                                             Password</label>
-                                        <input
+                                        <input id="newPassword"
                                             class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
                                             placeholder="••••••••" type="password" />
                                     </div>
                                     <div class="space-y-2">
                                         <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Confirm
                                             New Password</label>
-                                        <input
+                                        <input id="confirmPassword"
                                             class="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary text-sm"
                                             placeholder="••••••••" type="password" />
                                     </div>
                                 </div>
                                 <div
-                                    class="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    class="hidden pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                     <div>
                                         <p class="text-sm font-semibold text-slate-900 dark:text-white">Two-Factor
                                             Authentication</p>
@@ -273,7 +279,7 @@
                                     </label>
                                 </div>
                                 <div class="flex justify-end">
-                                    <button
+                                    <button id="btnUpdateSecurity"
                                         class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-shadow shadow-md">Update
                                         Security</button>
                                 </div>
@@ -358,6 +364,7 @@
     </div>
     <script src="storage.js"></script>
     <script src="auth.js"></script>
+    <script src="notifications.js"></script>
     <script src="user_profile.js"></script>
 </body>
 

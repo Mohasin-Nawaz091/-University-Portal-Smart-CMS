@@ -83,15 +83,15 @@
                 </div>
             </nav>
             <div class="p-4 border-t border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                <div onclick="window.location.href='user_profile.html'"
+                    class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800 rounded-xl cursor-pointer group">
                     <div class="size-8 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden">
-                        <img alt="Admin avatar" class="w-full h-full object-cover"
-                            data-alt="University Administrator profile photo"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ8KgR47FZRYJor1MJL0rcriti_24mHNkg2raPVGxY0d3HPWMp1uODVMI6fiz3SD2qEVzmI2u2j18gNHtGiY_2qOrPY6HuNM6C5cQjnBCNuf29VZnXHHm7f0H5NLROKKJM9N0aGot00Jrey07UFdRMQnMAJXK9DnfLi78qpkLa1_eTQN_AUZpcfUrArm-B7eRwCfhRmPTeULWDshJ-mXVHCmQrcRGo2NVubEV6EjBDK00IPDnFVUM6TRspAnsrz_wPxZLZ3WP0" />
+                        <img id="sidebarAvatar" alt="Admin avatar" class="w-full h-full object-cover"
+                            src="https://via.placeholder.com/150" />
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-xs font-semibold truncate">Dr. Sarah Wilson</p>
-                        <p class="text-[10px] text-slate-500">Super Admin</p>
+                        <p id="sidebarName" class="text-xs font-semibold truncate">Loading...</p>
+                        <p id="sidebarId" class="text-[10px] text-slate-500 truncate">Super Admin</p>
                     </div>
                     <button class="text-red-500 hover:text-red-700 logout-btn">
                         <span class="material-symbols-outlined text-sm">logout</span>

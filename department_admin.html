@@ -60,7 +60,8 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">EduResolve</h1>
-                        <p class="text-[10px] uppercase tracking-widest font-semibold text-primary">University Admin</p>
+                        <p class="text-[10px] uppercase tracking-widest font-semibold text-primary">Department Portal
+                        </p>
                     </div>
                 </div>
                 <nav class="space-y-1">
@@ -77,11 +78,19 @@
                 </nav>
             </div>
             <div class="mt-auto p-6 border-t border-slate-200 dark:border-slate-800">
-                <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                    href="user_profile.html">
-                    <span class="material-symbols-outlined">settings</span>
-                    <span class="text-sm font-medium">Profile</span>
-                </a>
+                <div onclick="window.location.href='user_profile.html'"
+                    class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border-2 border-slate-100 dark:border-slate-800 group-hover:border-primary transition-colors">
+                        <img id="sidebarAvatar" alt="User Profile" class="w-full h-full object-cover"
+                            src="https://via.placeholder.com/150" />
+                    </div>
+                    <div>
+                        <p id="sidebarName" class="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                            Loading...</p>
+                        <p id="sidebarId" class="text-[10px] text-slate-500">Loading...</p>
+                    </div>
+                </div>
                 <a class="logout-btn flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors cursor-pointer"
                     href="#">
                     <span class="material-symbols-outlined">logout</span>
@@ -111,17 +120,18 @@
                             class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 border-2 border-white dark:border-slate-900 rounded-full"></span>
                     </button>
                     <div class="h-8 w-px bg-slate-200 dark:border-slate-800 mx-2"></div>
-                    <div class="flex items-center gap-3 cursor-pointer group">
+                    <div onclick="window.location.href='user_profile.html'"
+                        class="flex items-center gap-3 cursor-pointer group">
                         <div class="text-right hidden sm:block">
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white leading-tight">Dr. Sarah
-                                Jenkins</p>
-                            <p class="text-xs text-slate-500">Dept. Head, CS</p>
+                            <p id="navbarName"
+                                class="text-sm font-semibold text-slate-900 dark:text-white leading-tight">Loading...
+                            </p>
+                            <p id="navbarRole" class="text-xs text-slate-500">Loading...</p>
                         </div>
                         <div
                             class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border-2 border-slate-100 dark:border-slate-800 group-hover:border-primary transition-colors">
-                            <img alt="User Profile" class="w-full h-full object-cover"
-                                data-alt="Professional female portrait for admin profile"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6Bqg0mXV8vi3IVN6DKvudFvjheAGXRYLy8yCIJhqkVtZSMx6dpf4CiehPlk2Rf5rFOoqA9woKoUOoRBA_KLw_cvDm52xQdT59px-ZP8CjRVrUx97VTl7G0mgwG5NpsOcMFouBdLpL-Ae7KfzM6TF-Mp7oH7y9TIWEdHB2XjPHLuvWSC7qglKhWVE8rf-QbsewncSHagiJGuKO99uE7PQoJSeW4iFrnOSespWsu5XlR3TlYrlz7RzeXyLfPD9Ziwaj-TBOxDjY" />
+                            <img id="navbarAvatar" alt="User Profile" class="w-full h-full object-cover"
+                                src="https://via.placeholder.com/150" />
                         </div>
                     </div>
                 </div>
@@ -410,6 +420,7 @@
     </div>
     <script src="storage.js"></script>
     <script src="auth.js"></script>
+    <script src="notifications.js"></script>
     <script src="dept_admin.js"></script>
 </body>
 

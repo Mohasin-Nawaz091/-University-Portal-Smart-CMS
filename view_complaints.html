@@ -72,11 +72,17 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-200 dark:border-slate-800">
-                <a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                    href="user_profile.html">
-                    <span class="material-symbols-outlined">settings</span>
-                    <span class="text-sm font-medium">Settings / Profile</span>
-                </a>
+                <div onclick="window.location.href='user_profile.html'"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                        <img id="sidebarAvatar" class="w-full h-full object-cover"
+                            src="https://via.placeholder.com/150" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p id="sidebarName" class="text-sm font-semibold truncate">Loading...</p>
+                        <p id="sidebarId" class="text-xs text-slate-500 truncate">Loading...</p>
+                    </div>
+                </div>
                 <a class="logout-btn flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
                     href="#">
                     <span class="material-symbols-outlined">logout</span>
@@ -106,10 +112,10 @@
                     <button class="text-slate-600 dark:text-slate-400">
                         <span class="material-symbols-outlined">account_circle</span>
                     </button>
-                    <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                        <img alt="Profile" class="w-full h-full object-cover"
-                            data-alt="Close up portrait of a young man"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfX_EpC3hxYCXQ4dQ8Ql_oCL6l1a_FDIquEb3gsgwHN6oyQ3C0YGFrGKRtP96KLoUGIAKvohwY5eG-_ABaGZnxXIn_vgMVEXL9yimNj5VGGDNMuysz2LJufKtc5JPHxEdNELFDMC4FDqBHkOKogQYavHpv0KCJpfXqcGUHc3q5jCoZ8V--NXA97c3iTYWafEExtDwgl2wuHhC6YvNVKFmidQh9SdgkiUdz1tiUh_EH4HSUa7zZlVH1wVqZCOoF6fKcgvWGKpUi" />
+                    <div onclick="window.location.href='user_profile.html'"
+                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden cursor-pointer">
+                        <img id="navbarAvatar" alt="Profile" class="w-full h-full object-cover"
+                            src="https://via.placeholder.com/150" />
                     </div>
                 </div>
             </header>
@@ -138,12 +144,12 @@
                         </div>
                     </div>
                     <div class="flex gap-3">
-                        <button
+                        <button id="btnPrintReport"
                             class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                             <span class="material-symbols-outlined text-base">print</span>
                             Print Report
                         </button>
-                        <button
+                        <button id="btnContactSupport"
                             class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
                             <span class="material-symbols-outlined text-base">mail</span>
                             Contact Support
@@ -178,7 +184,8 @@
                                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                                         Description</p>
                                     <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                                        <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                                        <p id="complaintDescription"
+                                            class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                                             The WiFi in the North Wing of the main library has been extremely slow for
                                             the past three days. It's difficult to access research papers or even basic
                                             university portals. The signal drops frequently, especially near the study
@@ -323,8 +330,8 @@
                         <!-- Quick Actions Card -->
                         <section class="bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20 p-6">
                             <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">Quick Actions</h3>
-                            <div class="space-y-3">
-                                <button
+                            <div class="space-y-3 font-display">
+                                <button id="btnExportPDF"
                                     class="w-full flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group">
                                     <div class="flex items-center gap-3">
                                         <span
@@ -333,7 +340,7 @@
                                     </div>
                                     <span class="material-symbols-outlined text-xs text-slate-400">arrow_forward</span>
                                 </button>
-                                <button
+                                <button id="btnForwardComplaint"
                                     class="w-full flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group">
                                     <div class="flex items-center gap-3">
                                         <span
@@ -342,7 +349,7 @@
                                     </div>
                                     <span class="material-symbols-outlined text-xs text-slate-400">arrow_forward</span>
                                 </button>
-                                <button
+                                <button id="btnViewHistory"
                                     class="w-full flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-all group">
                                     <div class="flex items-center gap-3">
                                         <span
@@ -373,6 +380,7 @@
     </div>
     <script src="storage.js"></script>
     <script src="auth.js"></script>
+    <script src="notifications.js"></script>
     <script src="complaints.js"></script>
 </body>
 

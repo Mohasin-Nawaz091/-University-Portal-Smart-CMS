@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const user = requireAuth(['student']);
     if (!user) return;
 
@@ -7,29 +7,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.endsWith('student_dashboard.html') || window.location.pathname.endsWith('student-dashboard.html')) {
         renderDashboardStats(user);
         renderRecentComplaints(user);
+    } else if (window.location.pathname.endsWith('my_complaints.html')) {
+        renderRecentComplaints(user);
     }
 });
 
 function renderSidebar(user) {
+    const sidebarName = document.getElementById('sidebarName');
+    const sidebarId = document.getElementById('sidebarId');
+    const sidebarAvatar = document.getElementById('sidebarAvatar');
+
+    if (sidebarName) sidebarName.textContent = user.name;
+    if (sidebarId) sidebarId.textContent = user.email; // Using email as ID display
+    if (sidebarAvatar && user.avatar) {
+        sidebarAvatar.src = user.avatar.startsWith('http') ? user.avatar : `${user.avatar}`;
+    }
+
+    // Also support old design if any
     const userNameElements = document.querySelectorAll('.user-name');
     const userEmailElements = document.querySelectorAll('.user-email');
-
     userNameElements.forEach(el => el.textContent = user.name);
     userEmailElements.forEach(el => el.textContent = user.email);
-
-    // Also try to find elements by old design structure
-    const sidebarProfile = document.querySelector('aside .p-4 .text-sm.font-semibold.truncate');
-    if (sidebarProfile) {
-        sidebarProfile.textContent = user.name;
-    }
-    const sidebarId = document.querySelector('aside .p-4 .text-xs.text-slate-500.truncate');
-    if (sidebarId) {
-        sidebarId.textContent = user.email; // using email as ID or something
-    }
 }
 
-function renderDashboardStats(user) {
-    const allComplaints = getComplaints().filter(c => c.userId === user.id);
+async function renderDashboardStats(user) {
+    const allComplaints = (await getComplaints()).filter(c => c.userId === user.id);
     const pendingCount = allComplaints.filter(c => c.status === 'Pending').length;
     const inProgressCount = allComplaints.filter(c => c.status === 'In Progress' || c.status === 'Assigned').length;
     const resolvedCount = allComplaints.filter(c => c.status === 'Resolved').length;
@@ -43,8 +45,8 @@ function renderDashboardStats(user) {
     }
 }
 
-function renderRecentComplaints(user) {
-    const allComplaints = getComplaints().filter(c => c.userId === user.id).sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+async function renderRecentComplaints(user) {
+    const allComplaints = (await getComplaints()).filter(c => c.userId === user.id).sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
     const tbody = document.querySelector('tbody');
     if (!tbody) return;
 

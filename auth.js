@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // Auto-redirect if already logged in and on login/register page
     const currentUser = getCurrentUser();
@@ -10,39 +10,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loginForm = document.querySelector('form');
     if (loginForm && window.location.pathname.endsWith('login.html')) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const role = document.querySelector('input[name="role"]:checked').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Simple validation
             if (!email || !password) {
                 alert("Please enter email and password");
                 return;
             }
 
-            // Simple login logic (accepts any email/password, but tries to see if user exists)
-            // If user doesn't exist, we just simulate a login anyway per instructions: "allow login with any email/password and just use the selected role"
-            let user = getUserByEmail(email);
-            if (!user) {
-                // creating dummy user on the fly if not exists just to satisfy the role requirement
-                user = {
-                    id: Date.now(),
-                    name: 'Guest ' + role,
-                    email: email,
-                    role: role,
-                    department: role === 'dept_admin' ? 'IT Department' : null
-                };
-                saveUser(user);
-            } else {
-                // force the selected role for this session, per prompt requirement
-                user.role = role;
-                if (role === 'dept_admin' && !user.department) user.department = 'IT Department';
-            }
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
 
-            setCurrentUser(user);
-            redirectBasedOnRole(role);
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    setCurrentUser(data.user);
+                    redirectBasedOnRole(data.user.role);
+                } else {
+                    alert(data.error || "Login failed");
+                }
+            } catch (err) {
+                alert("Server error");
+                console.error(err);
+            }
         });
     }
 
@@ -52,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const regDeptSelect = document.getElementById('department');
         if (regDeptSelect) {
             regDeptSelect.innerHTML = '<option value="" disabled selected>Select Department</option>';
-            getDepartments().forEach(d => {
+            const depts = ['BSAI', 'BSSE', 'BSDS', 'BSCS', 'BBA', 'Business Analytics'];
+            depts.forEach(d => {
                 const opt = document.createElement('option');
                 opt.value = d;
                 opt.textContent = d;
@@ -60,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -74,34 +71,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (getUserByEmail(email)) {
-                alert("Email already registered!");
-                return;
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, email, password, studentId, department, semester, role: 'student'
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    alert("Registration successful, please login.");
+                    window.location.href = 'login.html';
+                } else {
+                    alert(data.error || "Registration failed");
+                }
+            } catch (err) {
+                alert("Server error");
+                console.error(err);
             }
-
-            const newUser = {
-                name: name,
-                email: email,
-                password: password, // In real world we hash this
-                studentId: studentId,
-                department: department,
-                semester: semester,
-                role: 'student'
-            };
-
-            const savedUser = saveUser(newUser);
-            setCurrentUser(savedUser);
-            window.location.href = 'student_dashboard.html';
         });
     }
 
-    // Handle logout buttons
     const logoutButtons = document.querySelectorAll('.logout-btn');
     logoutButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             e.preventDefault();
             logout();
         });
+    });
+
+
+    // Hide explicit Profile nav links to avoid mapping duplication
+    document.querySelectorAll('aside nav a').forEach(link => {
+        if (link.textContent.includes('Profile')) {
+            link.style.display = 'none';
+        }
     });
 
 });
@@ -111,7 +117,7 @@ function redirectBasedOnRole(role) {
         window.location.href = 'student_dashboard.html';
     } else if (role === 'admin') {
         window.location.href = 'admin.html';
-    } else if (role === 'dept_admin') {
+    } else if (role === 'dept_admin' || role === 'department_admin') {
         window.location.href = 'department_admin.html';
     }
 }

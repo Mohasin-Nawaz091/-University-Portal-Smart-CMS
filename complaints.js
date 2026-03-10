@@ -1,19 +1,39 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const user = requireAuth();
+    if (!user) return;
+
+    renderUserInfo(user);
 
     // Determine context based on URL
     if (window.location.pathname.endsWith('submit_complaints.html')) {
-        const user = requireAuth(['student']);
-        if (!user) return;
         initSubmitComplaint(user);
     } else if (window.location.pathname.endsWith('view_complaints.html')) {
-        const user = requireAuth(); // any logged in user can view (with some restrictions)
-        if (!user) return;
         initViewComplaint(user);
     }
 
 });
 
-function initSubmitComplaint(user) {
+function renderUserInfo(user) {
+    // Sidebar population
+    const sidebarAvatar = document.getElementById('sidebarAvatar');
+    const sidebarName = document.getElementById('sidebarName');
+    const sidebarId = document.getElementById('sidebarId');
+
+    if (sidebarAvatar && user.avatar) {
+        sidebarAvatar.src = user.avatar.startsWith('http') ? user.avatar : `http://localhost:3000${user.avatar}`;
+    }
+    if (sidebarName) sidebarName.textContent = user.name;
+    if (sidebarId) sidebarId.textContent = user.studentId || user.email;
+
+    // Navbar population (for pages without sidebar)
+    const navbarAvatar = document.getElementById('navbarAvatar');
+    if (navbarAvatar && user.avatar) {
+        navbarAvatar.src = user.avatar.startsWith('http') ? user.avatar : `http://localhost:3000${user.avatar}`;
+    }
+}
+
+async function initSubmitComplaint(user) {
     const form = document.querySelector('form');
     if (!form) return;
 
@@ -28,14 +48,24 @@ function initSubmitComplaint(user) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     base64Image = event.target.result;
-                    // Optional: Update a preview thumbnail if needed
+                    const previewContainer = document.getElementById('file-preview-container');
+                    if (previewContainer) {
+                        previewContainer.innerHTML = `
+                            <div class="relative group aspect-square rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
+                                <img class="w-full h-full object-cover" src="${base64Image}" />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button class="bg-red-500 text-white p-1 rounded-full" type="button" onclick="document.getElementById('file-preview-container').innerHTML=''; base64Image=null;"><span class="material-symbols-outlined text-sm">close</span></button>
+                                </div>
+                            </div>
+                        `;
+                    }
                 };
                 reader.readAsDataURL(file);
             }
         });
     }
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const titleInput = document.querySelector('input[type="text"][placeholder*="e.g."]') || document.querySelector('input[type="text"]');
@@ -60,28 +90,20 @@ function initSubmitComplaint(user) {
             status: "Pending",
             department: null,
             adminNotes: [],
-            departmentNotes: [],
-            timeline: [
-                {
-                    type: "student",
-                    name: user.name,
-                    date: new Date().toISOString(),
-                    message: "Complaint submitted."
-                }
-            ]
+            departmentNotes: []
         };
 
-        const saved = saveComplaint(newComplaint);
+        const saved = await saveComplaint(newComplaint);
 
         // Notification
-        addNotification(1, `New complaint submitted: ${saved.title}`, `admin_assign_complain.html?id=${saved.id}`); // send to admin
+        await addNotification(1, `New complaint submitted: ${saved.title}`, `admin_assign_complain.html?id=${saved.id}`);
 
         alert("Complaint submitted successfully!");
         window.location.href = 'my_complaints.html';
     });
 }
 
-function initViewComplaint(user) {
+async function initViewComplaint(user) {
     const urlParams = new URLSearchParams(window.location.search);
     const complaintId = urlParams.get('id');
 
@@ -91,7 +113,7 @@ function initViewComplaint(user) {
         return;
     }
 
-    const complaint = getComplaintById(complaintId);
+    const complaint = await getComplaintById(complaintId);
     if (!complaint) {
         alert("Complaint not found.");
         window.history.back();
@@ -142,7 +164,7 @@ function initViewComplaint(user) {
         complaintInfoGrid[1].querySelector('.font-medium').textContent = complaint.category.toUpperCase();
     }
 
-    const descEl = document.querySelector('.bg-slate-50.rounded-lg p');
+    const descEl = document.getElementById('complaintDescription') || document.querySelector('section:not(.bg-white) .bg-slate-50.rounded-lg p') || document.querySelector('.bg-slate-50.rounded-lg p');
     if (descEl) descEl.textContent = complaint.description;
 
     const imgPreview = document.querySelector('.group.relative.w-32.h-24 img');
@@ -166,9 +188,19 @@ function initViewComplaint(user) {
 
     // Populate Timeline Activity
     const timelineContainer = document.querySelector('.space-y-6.relative');
-    if (timelineContainer && complaint.timeline) {
+    if (timelineContainer) {
         timelineContainer.innerHTML = '';
-        complaint.timeline.forEach(item => {
+        const timeline = complaint.timeline || [];
+
+        if (timeline.length === 0) {
+            timelineContainer.innerHTML = `
+                <div class="text-center py-4 text-slate-500 text-sm italic">
+                    No activity recorded yet.
+                </div>
+            `;
+        }
+
+        timeline.forEach(item => {
             let iconClass = 'bg-slate-100 text-slate-500';
             let iconStr = 'person';
 
@@ -205,35 +237,118 @@ function initViewComplaint(user) {
     const commentBox = document.querySelector('textarea.resize-none');
 
     if (commentBtn && commentBox) {
-        commentBtn.addEventListener('click', () => {
+        commentBtn.addEventListener('click', async () => {
             if (!commentBox.value) return;
 
-            let type = 'user';
-            if (user.role === 'admin') type = 'admin';
-            else if (user.role === 'dept_admin') type = 'department';
-            else if (user.role === 'student') type = 'student';
-
-            complaint.timeline = complaint.timeline || [];
-            complaint.timeline.push({
-                type: type,
-                name: user.name,
-                date: new Date().toISOString(),
-                message: commentBox.value
-            });
-
-            updateComplaint(complaint.id, { timeline: complaint.timeline });
+            const commentText = commentBox.value;
+            try {
+                const result = await addComment(complaint.id, commentText);
+                if (!result.success) throw new Error(result.error || "Failed to post comment");
+            } catch (err) {
+                alert("Error posting comment: " + err.message);
+                return;
+            }
 
             // Notification logic based on who commented
-            if (user.role === 'student') {
-                if (complaint.department) {
-                    addNotification(getUsers().find(u => u.department === complaint.department)?.id, `Student commented on ${complaint.title}`, `depart_admin_update_complain_status.html?id=${complaint.id}`);
+            try {
+                if (user.role === 'student') {
+                    if (complaint.department) {
+                        const allUsers = await fetch('http://localhost:3000/api/users', reqOpts()).then(r => r.json());
+                        const deptAdmin = allUsers.find(u => u.department && complaint.department && u.department.toLowerCase().includes(complaint.department.toLowerCase()));
+                        if (deptAdmin) await addNotification(deptAdmin.id, `Student commented on ${complaint.title}`, `depart_admin_update_complain_status.html?id=${complaint.id}`);
+                    }
+                } else {
+                    await addNotification(complaint.userId, `New comment on your complaint ${complaint.title}`, `view_complaints.html?id=${complaint.id}`);
                 }
-            } else {
-                addNotification(complaint.userId, `New comment on your complaint ${complaint.title}`, `view_complaints.html?id=${complaint.id}`);
+            } catch (notifyErr) {
+                console.warn("Notification failed, but comment was posted.", notifyErr);
             }
 
             commentBox.value = '';
-            initViewComplaint(user); // Reload timeline
+            // Refresh to show the new comment from the real backend
+            const updated = await getComplaintById(complaint.id);
+            initViewComplaint(user, updated);
+        });
+    }
+
+    // Functional Buttons
+    const btnPrint = document.getElementById('btnPrintReport');
+    if (btnPrint) btnPrint.onclick = () => window.print();
+
+    const btnExportPDF = document.getElementById('btnExportPDF');
+    if (btnExportPDF) btnExportPDF.onclick = () => {
+        alert("Exporting as PDF...");
+        window.print();
+    };
+
+    const btnContactSupport = document.getElementById('btnContactSupport');
+    if (btnContactSupport) {
+        btnContactSupport.onclick = () => {
+            window.location.href = `mailto:support@university.edu?subject=Support Request for Complaint #CMP-${complaint.id}`;
+        };
+    }
+
+    // Admin Specific Actions
+    if (user.role === 'admin') {
+        const quickActionsContainer = document.querySelector('section.bg-primary\\/5 .space-y-3');
+        if (quickActionsContainer) {
+            const assignBtn = document.createElement('button');
+            assignBtn.className = 'w-full flex items-center justify-between p-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all group mt-3';
+            assignBtn.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-white">assignment_ind</span>
+                    <span class="text-sm font-medium">Reassign / Manage</span>
+                </div>
+                <span class="material-symbols-outlined text-xs text-white">arrow_forward</span>
+            `;
+            assignBtn.onclick = () => window.location.href = `admin_assign_complain.html?id=${complaint.id}`;
+            quickActionsContainer.prepend(assignBtn);
+        }
+    }
+
+    const btnForward = document.getElementById('btnForwardComplaint');
+    if (btnForward) {
+        btnForward.onclick = async () => {
+            const email = prompt("Enter the email address to forward this complaint to:");
+            if (email) {
+                alert(`Complaint #CMP-${complaint.id} has been forwarded to ${email}.`);
+                // Optional: log to timeline
+                complaint.timeline = complaint.timeline || [];
+                complaint.timeline.push({
+                    type: 'system',
+                    name: 'System',
+                    date: new Date().toISOString(),
+                    message: `Complaint forwarded to ${email} by ${user.name}`
+                });
+                await updateComplaint(complaint.id, { timeline: complaint.timeline });
+                initViewComplaint(user);
+            }
+        };
+    }
+
+    const btnHistory = document.getElementById('btnViewHistory');
+    if (btnHistory) {
+        btnHistory.onclick = () => {
+            const tl = document.querySelector('.space-y-6.relative');
+            if (tl) tl.scrollIntoView({ behavior: 'smooth' });
+        };
+    }
+
+    // Hide Student Info Card for students, show for admins
+    if (user.role === 'student') {
+        document.querySelectorAll('h3').forEach(h3 => {
+            if (h3.textContent.trim().toLowerCase().includes('student information')) {
+                const card = h3.closest('section');
+                if (card) card.style.display = 'none';
+            }
+        });
+    } else if (user.role === 'admin' || user.role === 'dept_admin' || user.role === 'department_admin') {
+        // Ensure it's visible for staff
+        document.querySelectorAll('h3').forEach(h3 => {
+            if (h3.textContent.trim().toLowerCase().includes('student information')) {
+                const card = h3.closest('section');
+                if (card) card.style.display = 'block';
+            }
         });
     }
 
